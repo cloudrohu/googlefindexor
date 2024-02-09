@@ -1,0 +1,212 @@
+from ckeditor_uploader.fields import RichTextUploadingField
+from django.contrib.auth.models import User
+from django.db import models
+from django.utils.html import mark_safe
+# Create your models here.
+from django.db.models import Avg, Count
+from django.forms import ModelForm
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
+from django.db.models.signals import pre_save
+from utility.models import Find_From, Call_Status,Category,City,Locality,SocialSite
+from home.models import Society_Building
+
+
+from django.utils.text import slugify
+
+
+class Company(models.Model):
+   
+    STATUS = (
+        ('True', 'True'),
+        ('False', 'False'),
+    )
+
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    call_status = models.ForeignKey(Call_Status, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    find_from = models.ForeignKey(Find_From, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    title = models.CharField(max_length=250,unique=True)
+    contact_person = models.CharField(max_length=255,null=True , blank=True)
+    whatsapp = models.CharField(max_length=255,null=True , blank=True)
+    contact_no = models.CharField(max_length=255,null=True , blank=True)
+    email = models.EmailField(null=True,blank=True)
+    society_building = models.ForeignKey(Society_Building, on_delete=models.CASCADE) #many to one relation with Brand     
+    city = models.ForeignKey(City, on_delete=models.CASCADE) #many to one relation with Brand     
+    locality = models.ForeignKey(Locality, on_delete=models.CASCADE) #many to one relation with Brand 
+    address = models.CharField(max_length=500,null=True , blank=True)
+    keywords = models.CharField(max_length=255,null=True , blank=True)
+    website = models.CharField(max_length=255,null=True , blank=True)
+    google_map = models.CharField(max_length=1000,null=True , blank=True)
+    description = models.TextField(max_length=5000,null=True , blank=True)
+    image=models.ImageField(upload_to='images/')
+    facebook = models.CharField(max_length=255,null=True , blank=True)
+    twitter = models.CharField(max_length=255,null=True , blank=True)
+    instagram = models.CharField(max_length=255,null=True , blank=True)
+    pinterest = models.CharField(max_length=255,null=True , blank=True)
+    youtube = models.CharField(max_length=255,null=True , blank=True)
+    slug = models.SlugField(unique=True , null=True , blank=True)
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+    updated_by=models.ForeignKey(User, related_name='updated_by_user',on_delete=models.CASCADE,null=True,blank=True,)
+    created_by=models.ForeignKey(User, related_name='created_by_user',on_delete=models.CASCADE,null=True,blank=True,)
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name_plural='1. Company'
+
+
+    ## method to create a fake table field in read only mode
+    def image_tag(self):
+        if self.image.url is not None:
+            return mark_safe('<img src="{}" height="50"/>'.format(self.image.url))
+        else:
+            return ""
+
+    def save(self , *args , **kwargs):
+        self.slug = slugify(self.title + '--' + self.locality.title + '--' + self.city.title)
+        super(Company ,self).save(*args , **kwargs)
+
+
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
+
+    def avaregereview(self):
+        reviews = Comment.objects.filter(company=self, status='True').aggregate(avarage=Avg('rate'))
+        avg=0
+        if reviews["avarage"] is not None:
+            avg=float(reviews["avarage"])
+        return avg
+
+    def countreview(self):
+        reviews = Comment.objects.filter(company=self, status='True').aggregate(count=Count('id'))
+        cnt=0
+        if reviews["count"] is not None:
+            cnt = int(reviews["count"])
+        return cnt
+
+
+class Images(models.Model):
+    company=models.ForeignKey(Company,on_delete=models.CASCADE)
+    title = models.CharField(max_length=50,blank=True)
+    image = models.ImageField(blank=True, upload_to='images/')
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name_plural='9. Images'
+
+class Comment(models.Model):
+    STATUS = (
+        ('New', 'New'),
+        ('True', 'True'),
+        ('False', 'False'),
+    )
+    company=models.ForeignKey(Company,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=50, blank=True)
+    comment = models.CharField(max_length=250,blank=True)
+    rate = models.IntegerField(default=1)
+    ip = models.CharField(max_length=20, blank=True)
+    status=models.CharField(max_length=10,choices=STATUS, default='New')
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject
+    
+    class Meta:
+        verbose_name_plural='6. Comment'
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['subject', 'comment', 'rate']
+
+    class Meta:
+        verbose_name_plural='7. Approx'
+
+
+class SocialLink(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    socia_site = models.ForeignKey(SocialSite, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    link = models.CharField(max_length=50,unique=True)    
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.link
+    
+    class Meta:
+        verbose_name_plural='7. SocialLink'
+    
+class Error(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    title = models.CharField(max_length=500,unique=True)    
+    error = models.CharField(max_length=500,unique=True)    
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name_plural='6. Error'
+
+class Follow_Up(models.Model):
+    company = models.ForeignKey(Company,blank=True, null=True , on_delete=models.CASCADE)
+    follow_up = models.DateTimeField(blank=True, null=True,)
+    comment = models.CharField(max_length=500,blank=True, null=True,)
+
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.comment 
+        
+    class Meta:
+        verbose_name_plural='2. Follow_Up'
+
+
+class Faq(models.Model):
+    company=models.ForeignKey(Company,on_delete=models.CASCADE)
+    questions = models.CharField(max_length=500,blank=True)
+    answers = models.TextField(blank=True,)
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.questions
+    
+    class Meta:
+        verbose_name_plural='8. Faq'
+
+class Meeting(models.Model):
+    company = models.ForeignKey(Company,blank=True, null=True , on_delete=models.CASCADE)
+    meeting = models.DateTimeField(null=True, blank=True)
+    comment = models.CharField(max_length=500,blank=True, null=True,)
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.comment 
+    
+    class Meta:
+        verbose_name_plural='3. Meeting'
+    
+class Visit(models.Model):
+    company = models.ForeignKey(Company,blank=True, null=True , on_delete=models.CASCADE)
+    comment = models.CharField(max_length=500,blank=True, null=True,)
+    visit_date=models.DateTimeField(auto_now_add=True,)
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.comment 
+    
+    class Meta:
+        verbose_name_plural='4. Visit'
+
