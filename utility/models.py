@@ -41,7 +41,7 @@ class City(MPTTModel):
         ('True', 'True'),
         ('False', 'False'),
     )
-    country = models.ForeignKey(State, on_delete=models.CASCADE,blank=True, null=True ,)
+    state = models.ForeignKey(State, on_delete=models.CASCADE,blank=True, null=True ,)
     parent = TreeForeignKey('self',blank=True, null=True ,related_name='children', on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     keywords = models.CharField(max_length=255)
