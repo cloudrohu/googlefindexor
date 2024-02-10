@@ -58,8 +58,7 @@ class StateAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 class KeyWordsAdmin(admin.ModelAdmin):
-    list_display = [ 'country', 'state']
-    list_filter = ['country',]
+    list_display = [ 'keyword',]
     list_per_page = 25
 
 
