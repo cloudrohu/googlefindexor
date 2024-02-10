@@ -47,7 +47,7 @@ class Company(models.Model):
             return ""
 
     def save(self , *args , **kwargs):
-        self.slug = slugify(self.title + '--' + self.locality.title + '--' + self.city.title)
+        self.slug = slugify(self.title + '-' + self.locality.title + '-' + self.city.title)
         super(Company ,self).save(*args , **kwargs)
 
 

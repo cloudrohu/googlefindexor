@@ -61,7 +61,7 @@ class City(MPTTModel):
     
     
     def save(self , *args , **kwargs):
-        self.slug = slugify(self.title)
+        self.slug = slugify(self.title + '-' +self.state.state)
         super(City ,self).save(*args , **kwargs)
     
     
@@ -104,13 +104,13 @@ class Locality(MPTTModel):
     update_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title + '' +self.city.title
+        return self.title + '-' +self.city.title
     
     class Meta:
         verbose_name_plural='10. Locality'
     
     def save(self , *args , **kwargs):
-        self.slug = slugify(self.title + '' +self.city.title)
+        self.slug = slugify(self.title + '-' +self.city.title)
         super(Locality ,self).save(*args , **kwargs)
     
     
