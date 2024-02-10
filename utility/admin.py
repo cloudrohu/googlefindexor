@@ -21,6 +21,10 @@ class ApproxAdmin(admin.ModelAdmin):
     list_display = [ 'category', 'city','locality','total']
     list_filter = ['category', 'city','locality',]
 
+class StateAdmin(admin.ModelAdmin):
+    list_display = [ 'country', 'state']
+    list_filter = ['country',]
+
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(City)
 admin.site.register(Locality)
@@ -29,3 +33,5 @@ admin.site.register(Call_Status,)
 admin.site.register(Approx,)
 admin.site.register(SocialSite,)
 admin.site.register(KeyWords,)
+admin.site.register(Country,)
+admin.site.register(State,StateAdmin)
