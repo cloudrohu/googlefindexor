@@ -30,7 +30,7 @@ class State(models.Model):
     state  = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.country_name
+        return self.state
     
     class Meta:
         verbose_name_plural='8. State'
