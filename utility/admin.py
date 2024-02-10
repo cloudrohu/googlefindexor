@@ -23,6 +23,16 @@ class CityAdmin(admin.ModelAdmin):
     list_display = [ 'title','slug',]
     list_filter = ['title']
     inlines = [ApproxInline]
+    readonly_fields = ('slug',)
+
+
+@admin_thumbnails.thumbnail('image')
+class LocalityAdmin(admin.ModelAdmin):
+    list_display = [ 'title','slug',]
+    list_filter = ['title']
+    inlines = [ApproxInline]
+    readonly_fields = ('slug',)
+
 
 class ApproxAdmin(admin.ModelAdmin):
     list_display = [ 'category', 'city','locality','total']
@@ -34,7 +44,7 @@ class StateAdmin(admin.ModelAdmin):
 
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(City,CityAdmin)
-admin.site.register(Locality)
+admin.site.register(Locality,LocalityAdmin)
 admin.site.register(Find_From,)
 admin.site.register(Call_Status,)
 admin.site.register(Approx,)

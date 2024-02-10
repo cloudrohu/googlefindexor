@@ -67,7 +67,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ['company_name','contact_no', 'city', 'locality', 'slug','create_at','update_at',]
     list_filter = ['city','locality',]
     inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,DealInInline,FaqInline,ImagesInline]
-    readonly_fields = ('created_by',)
+    readonly_fields = ('created_by','slug')
 
 class Company_InfoAdmin(admin.ModelAdmin):
     list_display = ['image_tag','category','call_status', 'find_from', 'contact_person', 'contact_no', 'email_id','address','website', 'create_at','update_at','updated_by']
