@@ -1,4 +1,5 @@
 from django.contrib import admin
+import admin_thumbnails
 
 # Register your models here.
 
@@ -10,11 +11,17 @@ class ApproxInline(admin.TabularInline):
     extra = 1
     show_change_link = True
 
-
+@admin_thumbnails.thumbnail('image')
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = [ 'title','image_tag']
+    list_display = [ 'title','slug']
     list_filter = ['title']
-    readonly_fields = ('image_tag',)
+    inlines = [ApproxInline]
+
+
+@admin_thumbnails.thumbnail('image')
+class CityAdmin(admin.ModelAdmin):
+    list_display = [ 'title','slug',]
+    list_filter = ['title']
     inlines = [ApproxInline]
 
 class ApproxAdmin(admin.ModelAdmin):
@@ -26,7 +33,7 @@ class StateAdmin(admin.ModelAdmin):
     list_filter = ['country',]
 
 admin.site.register(Category,CategoryAdmin)
-admin.site.register(City)
+admin.site.register(City,CityAdmin)
 admin.site.register(Locality)
 admin.site.register(Find_From,)
 admin.site.register(Call_Status,)

@@ -166,12 +166,15 @@ class Category(MPTTModel):
             return mark_safe('<img src="{}" height="50"/>'.format(self.image.url))
         else:
             return ""
+        
+        
 
     class MPTTMeta:
         order_insertion_by = ['title']
 
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
+    
 
     def __str__(self):                           # __str__ method elaborated later in
         full_path = [self.title]                  # post.  use __unicode__ in place of
@@ -180,6 +183,7 @@ class Category(MPTTModel):
             full_path.append(k.title)
             k = k.parent
         return ' / '.join(full_path[::-1])
+
 
 
 class Find_From(models.Model):
