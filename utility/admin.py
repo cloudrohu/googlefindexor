@@ -43,10 +43,25 @@ class LocalityAdmin(admin.ModelAdmin):
 class ApproxAdmin(admin.ModelAdmin):
     list_display = [ 'category', 'city','locality','total']
     list_filter = ['category', 'city','locality',]
+    list_per_page = 25
+
+    
 
 class StateAdmin(admin.ModelAdmin):
     list_display = [ 'country', 'state']
     list_filter = ['country',]
+    list_per_page = 25
+
+class StateAdmin(admin.ModelAdmin):
+    list_display = [ 'country', 'state']
+    list_filter = ['country',]
+    list_per_page = 25
+
+class KeyWordsAdmin(admin.ModelAdmin):
+    list_display = [ 'country', 'state']
+    list_filter = ['country',]
+    list_per_page = 25
+
 
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(City,CityAdmin)
@@ -55,6 +70,6 @@ admin.site.register(Find_From,)
 admin.site.register(Call_Status,)
 admin.site.register(Approx,)
 admin.site.register(SocialSite,)
-admin.site.register(KeyWords,)
+admin.site.register(KeyWords,KeyWordsAdmin)
 admin.site.register(Country,)
 admin.site.register(State,StateAdmin)
