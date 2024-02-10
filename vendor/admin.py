@@ -68,32 +68,48 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ['city','locality',]
     inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,DealInInline,FaqInline,ImagesInline]
     readonly_fields = ('created_by','slug')
+    list_per_page = 25
+
 
 class Company_InfoAdmin(admin.ModelAdmin):
     list_display = ['image_tag','category','call_status', 'find_from', 'contact_person', 'contact_no', 'email_id','address','website', 'create_at','update_at','updated_by']
     list_filter = ['category','call_status', 'find_from',]
     readonly_fields = ('create_at',)
+    list_per_page = 25
+
 
 class User_CommentAdmin(admin.ModelAdmin):
     list_display = ['user','subject','comment', 'company','status','create_at','rate','ip']
     list_filter = ['status']
     list_editable = ['status']
     readonly_fields = ('subject','comment','ip','user','company','rate','id')
+    list_per_page = 25
+
 
 class ErrorAdmin(admin.ModelAdmin):
     list_display = ['company','title','error']
+    list_per_page = 25
+
 
 class FaqAdmin(admin.ModelAdmin):
     list_display = ['company','questions','answers', 'create_at', 'update_at']
+    list_per_page = 25
+
 
 class Follow_UpAdmin(admin.ModelAdmin):
     list_display = ['company','follow_up','comment', 'create_at', 'update_at']
+    list_per_page = 25
+
 
 class VisitAdmin(admin.ModelAdmin):
     list_display = ['company','visit_date','comment', 'create_at', 'update_at']
+    list_per_page = 25
+
 
 class MeetingAdmin(admin.ModelAdmin):
     list_display = ['company','meeting','comment', 'create_at', 'update_at']
+    list_per_page = 25
+
 
 admin.site.register(Company,CompanyAdmin)
 admin.site.register(Company_Info,Company_InfoAdmin)

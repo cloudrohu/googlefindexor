@@ -16,6 +16,8 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = [ 'title','slug']
     list_filter = ['title']
     inlines = [ApproxInline]
+    list_per_page = 25
+
 
 
 @admin_thumbnails.thumbnail('image')
@@ -24,6 +26,8 @@ class CityAdmin(admin.ModelAdmin):
     list_filter = ['state']
     inlines = [ApproxInline]
     readonly_fields = ('slug',)
+    list_per_page = 25
+
 
 
 @admin_thumbnails.thumbnail('image')
@@ -32,6 +36,8 @@ class LocalityAdmin(admin.ModelAdmin):
     list_filter = ['city']
     inlines = [ApproxInline]
     readonly_fields = ('slug',)
+    list_per_page = 25
+
 
 
 class ApproxAdmin(admin.ModelAdmin):
