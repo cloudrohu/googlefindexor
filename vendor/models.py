@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.db.models.signals import pre_save
-from utility.models import Find_From, Call_Status,Category,City,Locality,SocialSite
+from utility.models import Find_From, Call_Status,Category,City,Locality,SocialSite,KeyWords
 from home.models import Society_Building
 
 
@@ -24,32 +24,13 @@ class Company(models.Model):
         ('False', 'False'),
     )
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    call_status = models.ForeignKey(Call_Status, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    find_from = models.ForeignKey(Find_From, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    title = models.CharField(max_length=250,unique=True)
-    contact_person = models.CharField(max_length=255,null=True , blank=True)
-    whatsapp = models.CharField(max_length=255,null=True , blank=True)
+    company_name = models.CharField(max_length=250,unique=True)
     contact_no = models.CharField(max_length=255,null=True , blank=True)
-    email = models.EmailField(null=True,blank=True)
-    society_building = models.ForeignKey(Society_Building, on_delete=models.CASCADE) #many to one relation with Brand     
     city = models.ForeignKey(City, on_delete=models.CASCADE) #many to one relation with Brand     
     locality = models.ForeignKey(Locality, on_delete=models.CASCADE) #many to one relation with Brand 
-    address = models.CharField(max_length=500,null=True , blank=True)
-    keywords = models.CharField(max_length=255,null=True , blank=True)
-    website = models.CharField(max_length=255,null=True , blank=True)
-    google_map = models.CharField(max_length=1000,null=True , blank=True)
-    description = models.TextField(max_length=5000,null=True , blank=True)
-    image=models.ImageField(upload_to='images/')
-    facebook = models.CharField(max_length=255,null=True , blank=True)
-    twitter = models.CharField(max_length=255,null=True , blank=True)
-    instagram = models.CharField(max_length=255,null=True , blank=True)
-    pinterest = models.CharField(max_length=255,null=True , blank=True)
-    youtube = models.CharField(max_length=255,null=True , blank=True)
     slug = models.SlugField(unique=True , null=True , blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
-    updated_by=models.ForeignKey(User, related_name='updated_by_user',on_delete=models.CASCADE,null=True,blank=True,)
     created_by=models.ForeignKey(User, related_name='created_by_user',on_delete=models.CASCADE,null=True,blank=True,)
     def __str__(self):
         return self.title
@@ -88,9 +69,80 @@ class Company(models.Model):
         return cnt
 
 
+class Company_Info(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand   
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    find_from = models.ForeignKey(Find_From, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    contact_person = models.CharField(max_length=255,null=True , blank=True)
+    whatsapp_no = models.CharField(max_length=255,null=True , blank=True)
+    contact_no = models.CharField(max_length=255,null=True , blank=True)
+    email_id = models.EmailField(null=True,blank=True)
+    website = models.CharField(max_length=255,null=True , blank=True)
+    address = models.CharField(max_length=255,null=True , blank=True)
+    society_building = models.ForeignKey(Society_Building, on_delete=models.CASCADE,null=True , blank=True) #many to one relation with Brand     
+    google_map = models.CharField(max_length=1000,null=True , blank=True)
+    description = models.TextField(max_length=5000,null=True , blank=True)
+    image=models.ImageField(upload_to='images/')
+    call_status = models.ForeignKey(Call_Status, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+    updated_by=models.ForeignKey(User, related_name='updated_by_user',on_delete=models.CASCADE,null=True,blank=True,)
+    def __str__(self):
+        return self.company
+    
+    class Meta:
+        verbose_name_plural='2. Company Info'
+
+
+    ## method to create a fake table field in read only mode
+    def image_tag(self):
+        if self.image.url is not None:
+            return mark_safe('<img src="{}" height="50"/>'.format(self.image.url))
+        else:
+            return ""
+
+    def save(self , *args , **kwargs):
+        self.slug = slugify(self.title + '--' + self.locality.title + '--' + self.city.title)
+        super(Company ,self).save(*args , **kwargs)
+
+
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
+
+    def avaregereview(self):
+        reviews = Comment.objects.filter(company=self, status='True').aggregate(avarage=Avg('rate'))
+        avg=0
+        if reviews["avarage"] is not None:
+            avg=float(reviews["avarage"])
+        return avg
+
+    def countreview(self):
+        reviews = Comment.objects.filter(company=self, status='True').aggregate(count=Count('id'))
+        cnt=0
+        if reviews["count"] is not None:
+            cnt = int(reviews["count"])
+        return cnt
+
+
+class Social(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand   
+    
+    facebook = models.CharField(max_length=255,null=True , blank=True)
+    twitter = models.CharField(max_length=255,null=True , blank=True)
+    instagram = models.CharField(max_length=255,null=True , blank=True)
+    pinterest = models.CharField(max_length=255,null=True , blank=True)
+    youtube = models.CharField(max_length=255,null=True , blank=True)
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.facebook
+    
+    class Meta:
+        verbose_name_plural='6. Social'
+
+
 class Images(models.Model):
     company=models.ForeignKey(Company,on_delete=models.CASCADE)
-    title = models.CharField(max_length=50,blank=True)
     image = models.ImageField(blank=True, upload_to='images/')
 
     def __str__(self):
@@ -99,7 +151,7 @@ class Images(models.Model):
     class Meta:
         verbose_name_plural='9. Images'
 
-class Comment(models.Model):
+class User_Comment(models.Model):
     STATUS = (
         ('New', 'New'),
         ('True', 'True'),
@@ -119,7 +171,25 @@ class Comment(models.Model):
         return self.subject
     
     class Meta:
-        verbose_name_plural='6. Comment'
+        verbose_name_plural='4. User_Comment'
+
+class Comment(models.Model):
+    STATUS = (
+        ('New', 'New'),
+        ('True', 'True'),
+        ('False', 'False'),
+    )
+    company=models.ForeignKey(Company,on_delete=models.CASCADE)
+    comment = models.CharField(max_length=250,blank=True)
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject
+    
+    class Meta:
+        verbose_name_plural='13. Comment'
+
 
 class CommentForm(ModelForm):
     class Meta:
@@ -154,7 +224,7 @@ class Error(models.Model):
         return self.title
     
     class Meta:
-        verbose_name_plural='6. Error'
+        verbose_name_plural='3. Error'
 
 class Follow_Up(models.Model):
     company = models.ForeignKey(Company,blank=True, null=True , on_delete=models.CASCADE)
@@ -168,7 +238,7 @@ class Follow_Up(models.Model):
         return self.comment 
         
     class Meta:
-        verbose_name_plural='2. Follow_Up'
+        verbose_name_plural='10. Follow_Up'
 
 
 class Faq(models.Model):
@@ -195,7 +265,7 @@ class Meeting(models.Model):
         return self.comment 
     
     class Meta:
-        verbose_name_plural='3. Meeting'
+        verbose_name_plural='11. Meeting'
     
 class Visit(models.Model):
     company = models.ForeignKey(Company,blank=True, null=True , on_delete=models.CASCADE)
@@ -208,5 +278,18 @@ class Visit(models.Model):
         return self.comment 
     
     class Meta:
-        verbose_name_plural='4. Visit'
+        verbose_name_plural='12. Visit'
 
+
+class DealIn(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    keyword = models.ForeignKey(KeyWords, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.keyword
+    
+    class Meta:
+        verbose_name_plural='5. keywords'
+  

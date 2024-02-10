@@ -128,7 +128,7 @@ class Locality(MPTTModel):
     update_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        return self.title + '' +self.city.title
     
     class Meta:
         verbose_name_plural='3. Locality'
@@ -202,4 +202,19 @@ class Approx(models.Model):
     
     class Meta:
         verbose_name_plural='7. Approx'
+
+
+
+class KeyWords(models.Model):
+    keyword = models.CharField(max_length=50,unique=True)    
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.keyword
+    
+    class Meta:
+        verbose_name_plural='8. Key_Words'
+  
+
     

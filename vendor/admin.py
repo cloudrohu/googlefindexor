@@ -4,7 +4,25 @@ from django.contrib import admin
 # Register your models here.
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Company,Comment,Error,Faq,Follow_Up,Images,Meeting,SocialLink,Visit
+from .models import Company,User_Comment,Error,Faq,Follow_Up,Images,Meeting,SocialLink,Visit,Company_Info,DealIn,Comment,Social
+
+
+class DealInInline(admin.TabularInline):
+    model = DealIn
+    extra = 1
+    show_change_link = True
+
+class SocialInline(admin.TabularInline):
+    model = Social
+    extra = 1
+    show_change_link = True
+
+
+class Company_InfoInline(admin.TabularInline):
+    model = Company_Info
+    extra = 1
+    show_change_link = True
+
 
 class CommentInline(admin.TabularInline):
     model = Comment
@@ -46,12 +64,17 @@ class VisitInline(admin.TabularInline):
     show_change_link = True
 
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ['image_tag','category','call_status', 'find_from', 'contact_person', 'contact_no', 'email','city','locality','address','keywords', 'website', 'create_at','update_at','updated_by']
-    list_filter = ['category','category','call_status', 'find_from','city','locality',]
-    readonly_fields = ('image_tag',)
-    inlines = [CommentInline,ErrorInline,FaqInline,Follow_UpInline,ImagesInline,MeetingInline,MeetingInline,SocialLinkInline,VisitInline]
+    list_display = ['company_name','contact_no', 'city', 'locality', 'slug','create_at','update_at',]
+    list_filter = ['city','locality',]
+    inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,DealInInline,FaqInline,ImagesInline]
+    readonly_fields = ('created_by',)
 
-class CommentAdmin(admin.ModelAdmin):
+class Company_InfoAdmin(admin.ModelAdmin):
+    list_display = ['image_tag','category','call_status', 'find_from', 'contact_person', 'contact_no', 'email_id','address','website', 'create_at','update_at','updated_by']
+    list_filter = ['category','call_status', 'find_from',]
+    readonly_fields = ('create_at',)
+
+class User_CommentAdmin(admin.ModelAdmin):
     list_display = ['user','subject','comment', 'company','status','create_at','rate','ip']
     list_filter = ['status']
     list_editable = ['status']
@@ -73,7 +96,10 @@ class MeetingAdmin(admin.ModelAdmin):
     list_display = ['company','meeting','comment', 'create_at', 'update_at']
 
 admin.site.register(Company,CompanyAdmin)
-admin.site.register(Comment,CommentAdmin)
+admin.site.register(Company_Info,Company_InfoAdmin)
+
+admin.site.register(Comment,)
+admin.site.register(User_Comment,User_CommentAdmin)
 admin.site.register(Error,ErrorAdmin)
 admin.site.register(Faq,FaqAdmin)
 admin.site.register(Follow_Up,Follow_UpAdmin)
@@ -81,3 +107,5 @@ admin.site.register(Images,)
 admin.site.register(Meeting,MeetingAdmin)
 admin.site.register(SocialLink,)
 admin.site.register(Visit,VisitAdmin)
+admin.site.register(DealIn)
+admin.site.register(Social)
