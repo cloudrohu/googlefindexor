@@ -101,32 +101,10 @@ class Company_Info(models.Model):
         else:
             return ""
 
-    def save(self , *args , **kwargs):
-        self.slug = slugify(self.title + '--' + self.locality.title + '--' + self.city.title)
-        super(Company ,self).save(*args , **kwargs)
-
-
-    def get_absolute_url(self):
-        return reverse('category_detail', kwargs={'slug': self.slug})
-
-    def avaregereview(self):
-        reviews = Comment.objects.filter(company=self, status='True').aggregate(avarage=Avg('rate'))
-        avg=0
-        if reviews["avarage"] is not None:
-            avg=float(reviews["avarage"])
-        return avg
-
-    def countreview(self):
-        reviews = Comment.objects.filter(company=self, status='True').aggregate(count=Count('id'))
-        cnt=0
-        if reviews["count"] is not None:
-            cnt = int(reviews["count"])
-        return cnt
 
 
 class Social(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand   
-    
+    company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand       
     facebook = models.CharField(max_length=255,null=True , blank=True)
     twitter = models.CharField(max_length=255,null=True , blank=True)
     instagram = models.CharField(max_length=255,null=True , blank=True)
