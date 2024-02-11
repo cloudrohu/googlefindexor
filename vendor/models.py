@@ -87,8 +87,9 @@ class Company_Info(models.Model):
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
     updated_by=models.ForeignKey(User, related_name='updated_by_user',on_delete=models.CASCADE,null=True,blank=True,)
+
     def __str__(self):
-        return self.company
+        return self.contact_person
     
     class Meta:
         verbose_name_plural='2. Company Info'
