@@ -1,5 +1,6 @@
 from django.contrib import admin
 import admin_thumbnails
+from mptt.admin import DraggableMPTTAdmin
 
 # Register your models here.
 
@@ -19,6 +20,17 @@ class CategoryAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 
+@admin_thumbnails.thumbnail('image')
+class CategoryAdmin2(DraggableMPTTAdmin):
+    mptt_indent_field = "title"
+    list_display = ('id','tree_actions', 'indented_title', 'image_thumbnail',
+                    )
+    list_display_links = ('indented_title',)
+    prepopulated_fields = {'slug': ('title',)}
+    list_filter = ['title']
+    inlines = [ApproxInline]
+    list_per_page = 25
+
 
 @admin_thumbnails.thumbnail('image')
 class CityAdmin(admin.ModelAdmin):
@@ -27,8 +39,6 @@ class CityAdmin(admin.ModelAdmin):
     inlines = [ApproxInline]
     readonly_fields = ('slug',)
     list_per_page = 25
-
-
 
 @admin_thumbnails.thumbnail('image')
 class LocalityAdmin(admin.ModelAdmin):
@@ -62,7 +72,7 @@ class KeyWordsAdmin(admin.ModelAdmin):
     list_per_page = 25
 
 
-admin.site.register(Category,CategoryAdmin)
+admin.site.register(Category,CategoryAdmin2)
 admin.site.register(City,CityAdmin)
 admin.site.register(Locality,LocalityAdmin)
 admin.site.register(Find_From,)
