@@ -52,22 +52,8 @@ class Company(models.Model):
 
 
     def get_absolute_url(self):
-        return reverse('category_detail', kwargs={'slug': self.slug})
-
-    def avaregereview(self):
-        reviews = Comment.objects.filter(company=self, status='True').aggregate(avarage=Avg('rate'))
-        avg=0
-        if reviews["avarage"] is not None:
-            avg=float(reviews["avarage"])
-        return avg
-
-    def countreview(self):
-        reviews = Comment.objects.filter(company=self, status='True').aggregate(count=Count('id'))
-        cnt=0
-        if reviews["count"] is not None:
-            cnt = int(reviews["count"])
-        return cnt
-
+        return reverse('category_detail', kwargs={'slug': self.slug})  
+    
 
 class Company_Info(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand   

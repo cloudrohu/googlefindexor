@@ -36,14 +36,13 @@ class State(models.Model):
         verbose_name_plural='8. State'
     
 
-class City(MPTTModel):
+class City(models.Model):
     STATUS = (
         ('True', 'True'),
         ('False', 'False'),
     )
     state = models.ForeignKey(State, on_delete=models.CASCADE,blank=True, null=True ,)
-    parent = TreeForeignKey('self',blank=True, null=True ,related_name='children', on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=250)
     keywords = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
     image=models.ImageField(blank=True,upload_to='images/')
@@ -77,22 +76,13 @@ class City(MPTTModel):
     def get_absolute_url(self):
         return reverse('city_detail', kwargs={'slug': self.slug})
 
-    def __str__(self):                           # __str__ method elaborated later in
-        full_path = [self.title]                  # post.  use __unicode__ in place of
-        k = self.parent
-        while k is not None:
-            full_path.append(k.title)
-            k = k.parent
-        return ' / '.join(full_path[::-1])
 
-
-class Locality(MPTTModel):
+class Locality(models.Model):
     STATUS = (
         ('True', 'True'),
         ('False', 'False'),
     )
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    parent = TreeForeignKey('self',blank=True, null=True ,related_name='children', on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     keywords = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
@@ -126,13 +116,7 @@ class Locality(MPTTModel):
     def get_absolute_url(self):
         return reverse('locality_detail', kwargs={'slug': self.slug})
 
-    def __str__(self):                           # __str__ method elaborated later in
-        full_path = [self.title]                  # post.  use __unicode__ in place of
-        k = self.parent
-        while k is not None:
-            full_path.append(k.title)
-            k = k.parent
-        return ' / '.join(full_path[::-1])
+
 
 class Category(MPTTModel):
     STATUS = (
