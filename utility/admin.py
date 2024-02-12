@@ -45,6 +45,7 @@ class LocalityAdmin(admin.ModelAdmin):
     list_display = [ 'title','slug',]
     list_filter = ['city']
     inlines = [ApproxInline]
+    search_fields = [ 'title',]
     readonly_fields = ('slug',)
     list_per_page = 25
 

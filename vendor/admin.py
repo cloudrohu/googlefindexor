@@ -65,10 +65,12 @@ class VisitInline(admin.TabularInline):
 
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ['company_name','contact_no', 'city', 'locality', 'slug','create_at','update_at',]
-    list_filter = ['city','locality',]
-    inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,DealInInline,FaqInline,ImagesInline]
+    list_filter = ['city','locality','create_at','update_at',]
+    search_fields = ['company_name','contact_no',]
     readonly_fields = ('created_by','slug')
     list_per_page = 25
+    inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,DealInInline,FaqInline,ImagesInline]
+   
 
 
 class Company_InfoAdmin(admin.ModelAdmin):
