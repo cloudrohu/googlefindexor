@@ -4,13 +4,9 @@ from django.contrib import admin
 # Register your models here.
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Company,User_Comment,Error,Faq,Follow_Up,Images,Meeting,SocialLink,Visit,Company_Info,DealIn,Comment,Social
+from .models import Company,User_Comment,Error,Faq,Follow_Up,Images,Meeting,SocialLink,Visit,Company_Info,Comment,Social
 
 
-class DealInInline(admin.TabularInline):
-    model = DealIn
-    extra = 1
-    show_change_link = True
 
 class SocialInline(admin.TabularInline):
     model = Social
@@ -69,7 +65,7 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['company_name','contact_no',]
     readonly_fields = ('created_by','slug')
     list_per_page = 25
-    inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,DealInInline,FaqInline,ImagesInline]
+    inlines = [Company_InfoInline,CommentInline,SocialInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,VisitInline,FaqInline,ImagesInline]
    
 
 
@@ -125,5 +121,4 @@ admin.site.register(Images,)
 admin.site.register(Meeting,MeetingAdmin)
 admin.site.register(SocialLink,)
 admin.site.register(Visit,VisitAdmin)
-admin.site.register(DealIn)
 admin.site.register(Social)

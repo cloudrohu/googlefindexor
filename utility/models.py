@@ -212,16 +212,4 @@ class Approx(models.Model):
     class Meta:
         verbose_name_plural='3. Approx'
 
-class KeyWords(models.Model):
-    keyword = models.CharField(max_length=50,unique=True)    
-    create_at=models.DateTimeField(auto_now_add=True)
-    update_at=models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.keyword
-    
-    class Meta:
-        verbose_name_plural='1. Key_Words'
-  
-
     

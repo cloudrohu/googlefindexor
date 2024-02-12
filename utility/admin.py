@@ -68,9 +68,6 @@ class StateAdmin(admin.ModelAdmin):
     list_filter = ['country',]
     list_per_page = 25
 
-class KeyWordsAdmin(admin.ModelAdmin):
-    list_display = [ 'keyword',]
-    list_per_page = 25
 
 
 admin.site.register(Category,CategoryAdmin2)
@@ -80,6 +77,5 @@ admin.site.register(Find_From,)
 admin.site.register(Call_Status,)
 admin.site.register(Approx,)
 admin.site.register(SocialSite,)
-admin.site.register(KeyWords,KeyWordsAdmin)
 admin.site.register(Country,)
 admin.site.register(State,StateAdmin)

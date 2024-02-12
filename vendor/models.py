@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.db.models.signals import pre_save
-from utility.models import Find_From, Call_Status,Category,City,Locality,SocialSite,KeyWords
+from utility.models import Find_From, Call_Status,Category,City,Locality,SocialSite
 from home.models import Society_Building
 
 
@@ -243,18 +243,4 @@ class Visit(models.Model):
         return self.comment 
     
     class Meta:
-        verbose_name_plural='12. Visit'
-
-
-class DealIn(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    keyword = models.ForeignKey(KeyWords, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    create_at=models.DateTimeField(auto_now_add=True)
-    update_at=models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.keyword
-    
-    class Meta:
-        verbose_name_plural='5. keywords'
-  
+        verbose_name_plural='12. Visit'  
