@@ -35,7 +35,7 @@ class Society_Building(models.Model):
     
     def save(self , *args , **kwargs):
         self.slug = slugify(self.name  + '' + self.locality.title + '' + self.city.title)
-        super(Locality ,self).save(*args , **kwargs)
+        super(Society_Building ,self).save(*args , **kwargs)
     
     
     def image_tag(self):
@@ -48,15 +48,7 @@ class Society_Building(models.Model):
         order_insertion_by = ['title']
 
     def get_absolute_url(self):
-        return reverse('locality_detail', kwargs={'slug': self.slug})
-
-    def __str__(self):                           # __str__ method elaborated later in
-        full_path = [self.title]                  # post.  use __unicode__ in place of
-        k = self.parent
-        while k is not None:
-            full_path.append(k.title)
-            k = k.parent
-        return ' / '.join(full_path[::-1])
+        return reverse('city_detail', kwargs={'slug': self.slug})
 
 
 class Images(models.Model):
