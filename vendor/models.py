@@ -46,7 +46,7 @@ class Company(models.Model):
     description = models.TextField(max_length=5000,null=True , blank=True)
     image=models.ImageField(upload_to='images/')
     call_status=models.CharField(max_length=50,choices=Call_Status, default='New')
-    call_comment = models.TextField(max_length=5000,null=True , blank=True)
+    call_comment = models.CharField(max_length=1000,null=True , blank=True)
     slug = models.SlugField(unique=True , null=True , blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)

@@ -77,17 +77,10 @@ class City(models.Model):
         return reverse('city_detail', kwargs={'slug': self.slug})
 
 
-class Locality(models.Model):
-    STATUS = (
-        ('True', 'True'),
-        ('False', 'False'),
-    )
+class Locality(models.Model):   
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)
-    keywords = models.CharField(max_length=255)
-    description = models.TextField(max_length=255)
+    title = models.CharField(max_length=150)
     image=models.ImageField(blank=True,upload_to='images/')
-    status=models.CharField(max_length=10, choices=STATUS)
     featured_category = models.BooleanField(default=False)
     slug = models.SlugField(unique=True , null=True , blank=True)
     create_at=models.DateTimeField(auto_now_add=True)

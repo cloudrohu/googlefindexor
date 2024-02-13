@@ -42,7 +42,7 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin_thumbnails.thumbnail('image')
 class LocalityAdmin(admin.ModelAdmin):
-    list_display = [ 'title','slug','image_thumbnail']
+    list_display = [ 'title','slug', 'city','image_thumbnail']
     list_filter = ['city']
     inlines = [ApproxInline]
     search_fields = [ 'title',]
