@@ -11,8 +11,8 @@ class ImagesInInline(admin.TabularInline):
 
 
 class Society_BuildingAdmin(admin.ModelAdmin):
-    list_display = [ 'name', 'city','locality']
-    list_filter = ['city','locality',]
+    list_display = [ 'name', 'city','locality','building_type','google_map']
+    list_filter = ['city','locality','building_type']
     inlines = [ImagesInInline,]
 
     list_per_page = 25
