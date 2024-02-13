@@ -15,14 +15,45 @@ from utility.models import City, Locality
 from django.utils.text import slugify
 
 
-class Society_Building(models.Model):
+class BuilderDeveloper(models.Model):   
+    city = models.ForeignKey(City, on_delete=models.CASCADE) #many to one relation with Brand
+    name = models.CharField(max_length=150) 
+    image=models.ImageField(blank=True,upload_to='images/')
+    google_map = models.CharField(max_length=1000,blank=True,) 
+    create_at=models.DateTimeField(auto_now_add=True)
+    update_at=models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name    
+    class Meta:
+        verbose_name_plural='3. BuilderDeveloper'
+
+    def save(self , *args , **kwargs):
+        self.slug = slugify(self.name + '' + self.city.title)
+        super(BuilderDeveloper ,self).save(*args , **kwargs)    
+    
+    def image_tag(self):
+        if self.image.url is not None:
+            return mark_safe('<img src="{}" height="50"/>'.format(self.image.url))
+        else:
+            return ""
+
+    class MPTTMeta:
+        order_insertion_by = ['title']
+
+    def get_absolute_url(self):
+        return reverse('developer_detail', kwargs={'slug': self.slug})
+
+
+
+class Society_Building(models.Model):
     Building_Type = (
         ('Residential', 'Residential'),
         ('Commercial ', 'Commercial '),
         
     )
     city = models.ForeignKey(City, on_delete=models.CASCADE) #many to one relation with Brand
+    developer = models.ForeignKey(BuilderDeveloper,null=True,blank=True, on_delete=models.CASCADE) #many to one relation with Brand
     locality = models.ForeignKey(Locality, on_delete=models.CASCADE) #many to one relation with Brand
     building_type=models.CharField(max_length=50,choices=Building_Type, default='Commercial')
     name = models.CharField(max_length=150) 
@@ -36,14 +67,10 @@ class Society_Building(models.Model):
     
     class Meta:
         verbose_name_plural='1. Society_Building'
-
-
-
     
     def save(self , *args , **kwargs):
         self.slug = slugify(self.name  + '' + self.locality.title + '' + self.city.title)
-        super(Society_Building ,self).save(*args , **kwargs)
-    
+        super(Society_Building ,self).save(*args , **kwargs)    
     
     def image_tag(self):
         if self.image.url is not None:
