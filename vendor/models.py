@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from django.db.models.signals import pre_save
-from utility.models import Find_From, Call_Status,Category,City,Locality,SocialSite
+from utility.models import Find_From,Category,City,Locality,SocialSite
 from home.models import Society_Building
 
 
@@ -18,16 +18,35 @@ from django.utils.text import slugify
 
 
 class Company(models.Model):
-   
-    STATUS = (
-        ('True', 'True'),
-        ('False', 'False'),
-    )
 
+    Call_Status = (
+        ('New', 'New'),
+        ('Foloow_Up', 'Foloow_Up'),
+        ('Meeting', 'Meeting'),
+        ('Deal_Done', 'Deal_Done'),
+        ('Call Not Receive', 'Call Not Receive'),
+        ('Not Interested', 'Not Interested'),
+        ('Deal_Done', 'Deal_Done'),
+        ('Call Cut', 'Call Cut'),
+    )
+           
     company_name = models.CharField(max_length=250,unique=True)
+    contact_person = models.CharField(max_length=255,null=True , blank=True)
     contact_no = models.CharField(max_length=255,null=True , blank=True)
+    whatsapp_no = models.CharField(max_length=255,null=True , blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE) #many to one relation with Brand     
     locality = models.ForeignKey(Locality, on_delete=models.CASCADE) #many to one relation with Brand 
+    society_building = models.ForeignKey(Society_Building, on_delete=models.CASCADE,null=True , blank=True) #many to one relation with Brand    
+    find_from = models.ForeignKey(Find_From, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
+    email_id = models.EmailField(null=True,blank=True)
+    website = models.CharField(max_length=255,null=True , blank=True)
+    address = models.CharField(max_length=255,null=True , blank=True)
+    google_map = models.CharField(max_length=1000,null=True , blank=True)
+    description = models.TextField(max_length=5000,null=True , blank=True)
+    image=models.ImageField(upload_to='images/')
+    call_status=models.CharField(max_length=50,choices=Call_Status, default='New')
+    call_comment = models.TextField(max_length=5000,null=True , blank=True)
     slug = models.SlugField(unique=True , null=True , blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
@@ -54,41 +73,13 @@ class Company(models.Model):
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})  
     
-
-class Company_Info(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand   
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    find_from = models.ForeignKey(Find_From, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    contact_person = models.CharField(max_length=255,null=True , blank=True)
-    whatsapp_no = models.CharField(max_length=255,null=True , blank=True)
-    contact_no = models.CharField(max_length=255,null=True , blank=True)
-    email_id = models.EmailField(null=True,blank=True)
-    website = models.CharField(max_length=255,null=True , blank=True)
-    address = models.CharField(max_length=255,null=True , blank=True)
-    society_building = models.ForeignKey(Society_Building, on_delete=models.CASCADE,null=True , blank=True) #many to one relation with Brand     
-    google_map = models.CharField(max_length=1000,null=True , blank=True)
-    description = models.TextField(max_length=5000,null=True , blank=True)
-    image=models.ImageField(upload_to='images/')
-    call_status = models.ForeignKey(Call_Status, on_delete=models.CASCADE,null=True,blank=True) #many to one relation with Brand
-    create_at=models.DateTimeField(auto_now_add=True)
-    update_at=models.DateTimeField(auto_now=True)
-    updated_by=models.ForeignKey(User, related_name='updated_by_user',on_delete=models.CASCADE,null=True,blank=True,)
-
-    def __str__(self):
-        return self.contact_person
     
-    class Meta:
-        verbose_name_plural='2. Company Info'
-
-
     ## method to create a fake table field in read only mode
     def image_tag(self):
         if self.image.url is not None:
             return mark_safe('<img src="{}" height="50"/>'.format(self.image.url))
         else:
             return ""
-
-
 
 class Social(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE) #many to one relation with Brand       

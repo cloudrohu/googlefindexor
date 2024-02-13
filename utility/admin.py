@@ -14,7 +14,7 @@ class ApproxInline(admin.TabularInline):
 
 @admin_thumbnails.thumbnail('image')
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = [ 'title','slug']
+    list_display = [ 'title','slug','image_thumbnail']
     list_filter = ['title']
     inlines = [ApproxInline]
     list_per_page = 25
@@ -34,7 +34,7 @@ class CategoryAdmin2(DraggableMPTTAdmin):
 
 @admin_thumbnails.thumbnail('image')
 class CityAdmin(admin.ModelAdmin):
-    list_display = [ 'title','slug',]
+    list_display = [ 'title','slug','image_thumbnail']
     list_filter = ['state']
     inlines = [ApproxInline]
     readonly_fields = ('slug',)
@@ -42,7 +42,7 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin_thumbnails.thumbnail('image')
 class LocalityAdmin(admin.ModelAdmin):
-    list_display = [ 'title','slug',]
+    list_display = [ 'title','slug','image_thumbnail']
     list_filter = ['city']
     inlines = [ApproxInline]
     search_fields = [ 'title',]
