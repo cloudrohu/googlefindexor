@@ -27,7 +27,7 @@ class Society_Building(models.Model):
     building_type=models.CharField(max_length=50,choices=Building_Type, default='Commercial')
     name = models.CharField(max_length=150) 
     image=models.ImageField(blank=True,upload_to='images/')
-    google_map = models.CharField(max_length=1000,unique=True,blank=True,) 
+    google_map = models.CharField(max_length=1000,blank=True,) 
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
 
