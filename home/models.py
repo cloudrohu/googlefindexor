@@ -16,8 +16,15 @@ from django.utils.text import slugify
 
 
 class Society_Building(models.Model):
+
+    Building_Type = (
+        ('Residential', 'Residential'),
+        ('Commercial ', 'Commercial '),
+        
+    )
     city = models.ForeignKey(City, on_delete=models.CASCADE) #many to one relation with Brand
     locality = models.ForeignKey(Locality, on_delete=models.CASCADE) #many to one relation with Brand
+    building_type=models.CharField(max_length=50,choices=Building_Type, default='Commercial')
     name = models.CharField(max_length=150) 
     image=models.ImageField(blank=True,upload_to='images/')
     google_map = models.CharField(max_length=1000,unique=True,blank=True,) 
