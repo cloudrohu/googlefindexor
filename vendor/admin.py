@@ -77,7 +77,6 @@ class ErrorAdmin(admin.ModelAdmin):
 class FaqAdmin(admin.ModelAdmin):
     list_display = ['company','questions','answers', 'create_at', 'update_at']
     search_fields = ['company']
-
     list_per_page = 25
 
 
@@ -85,7 +84,6 @@ class Follow_UpAdmin(admin.ModelAdmin):
     list_display = ['company','follow_up','comment', 'create_at', 'update_at']
     list_filter = ['follow_up', 'create_at', 'update_at']
     search_fields = ['company']
-
     list_per_page = 25
 
 

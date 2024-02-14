@@ -14,15 +14,15 @@ class ImagesInInline(admin.TabularInline):
 class Society_BuildingAdmin(admin.ModelAdmin):
     list_display = [ 'id', 'image_thumbnail','name', 'city','locality','developer','building_type','google_map']
     list_filter = ['id','city','locality','developer','building_type']
+    search_fields = ['name']
     inlines = [ImagesInInline,]
-
     list_per_page = 25
 
 @admin_thumbnails.thumbnail('image')
 class BuilderDeveloperAdmin(admin.ModelAdmin):
     list_display = [ 'name', 'city','image_thumbnail']
     list_filter = ['city',]
-
+    search_fields = ['name']
     list_per_page = 25
 
 
