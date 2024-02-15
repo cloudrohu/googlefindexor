@@ -53,7 +53,7 @@ class Company(models.Model):
     created_by=models.ForeignKey(User, related_name='created_by_user',on_delete=models.CASCADE,null=True,blank=True,)
 
     def __str__(self):
-        return self.company_name + '--' + self.contact_no + '--' + self.locality.title
+        return self.company_name
     
     class Meta:
         verbose_name_plural='1. Company'
