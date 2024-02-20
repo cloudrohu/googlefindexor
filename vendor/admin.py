@@ -50,9 +50,10 @@ class VisitInline(admin.TabularInline):
 
 @admin_thumbnails.thumbnail('image')
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ['id', 'image_thumbnail','category','find_from','company_name','contact_no', 'city', 'locality', 'slug','create_at','update_at',]
-    list_filter = ['category','city','locality','find_from','create_at','update_at',]
-    search_fields = ['company_name','contact_no',]
+    list_display = ['id', 'image_thumbnail', 'company_name', 'contact_no','call_comment', 'call_status', 'category','find_from', 'city', 'locality', 'society_building', 'slug','create_at','update_at',]
+    list_filter = ['category','city','locality','find_from','create_at','update_at', 'call_status']
+    list_editable = ['category','locality', 'society_building','call_status','call_comment',]
+    search_fields = ['company_name','contact_no','call_status','call_comment','locality', 'society_building', ]
     readonly_fields = ('created_by','slug')
     list_per_page = 25
     inlines = [VisitInline,ErrorInline,Follow_UpInline,MeetingInline,SocialLinkInline,FaqInline,ImagesInline,SocialInline]
