@@ -1,0 +1,676 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Findexors – Find Trusted Businesses{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Find trusted local businesses near you on Findexors.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}business listing, local services, findexors{% endblock %}">
+    <meta name="author" content="Findexors">
+    <meta name="robots" content="index, follow">
+
+    <link rel="icon" href="{% static 'assets/images/favicon.png' %}">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+
+<style>
+  *{
+    font-family: 'Inter', sans-serif;
+  }
+
+  html{
+    scroll-behavior:smooth;
+  }
+
+  body{
+    background:#0b1120;
+  }
+
+  /* Glass Navbar */
+  .glass-nav{
+    background:rgba(10,15,30,0.75);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Gradient Button */
+  .gradient-btn{
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    transition:0.35s ease;
+    box-shadow:0 10px 25px rgba(37,99,235,0.25);
+  }
+
+  .gradient-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 15px 35px rgba(124,58,237,0.35);
+  }
+
+  /* Nav Hover */
+  .nav-link{
+    position:relative;
+  }
+
+  .nav-link::after{
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-6px;
+    width:0%;
+    height:2px;
+    background:#60a5fa;
+    transition:0.3s;
+  }
+
+  .nav-link:hover::after{
+    width:100%;
+  }
+
+  /* Dropdown */
+  .dropdown:hover .dropdown-menu{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+  }
+
+  .dropdown-menu{
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(15px);
+    transition:0.3s ease;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu{
+    right:-100%;
+    transition:0.4s ease;
+  }
+
+  .mobile-menu.active{
+    right:0;
+  }
+    @keyframes popupUp {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-popup {
+    animation: popupUp .3s ease;
+  }
+</style>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="bg-[#071120] border-b border-white/10 text-gray-300 text-sm hidden lg:block">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+
+            <div class="flex items-center gap-6">
+            <a href="tel:+919898034466" class="hover:text-white transition">
+                <i class="fa-solid fa-phone-volume"></i> +91 9898 03 4466
+            </a>
+
+            <a href="mailto:info@cloudrohu.com" class="hover:text-white transition">
+                <i class="fa-solid fa-envelope"></i> support@googlefindexor.com
+            </a>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <i class="fa-solid fa-rocket"></i>
+            <span class="text-cyan-400">
+                Grow Your Business With Digital Marketing
+            </span>
+            </div>
+
+        </div>
+    </div>
+
+    <header class="glass-nav sticky top-0 z-50 bg-white shadow-lg">
+
+        <div class="max-w-7xl mx-auto px-5 lg:px-8">
+
+            <div class="flex items-center justify-between h-[82px]">
+
+            <!-- LOGO -->
+            <a href=home class="flex items-center gap-3">
+
+                <div>
+                    <img src="{% static "images/logo.png" %}" alt="Google Findexor" style="width: 250px; height: 75px;">
+                </div>
+
+            </a>
+
+            <!-- DESKTOP MENU -->
+            <nav class="hidden lg:flex items-center gap-9 text-black">
+
+                <a href=home class="nav-link text-[15px] font-medium">
+                    Home
+                </a>
+
+                <a href="{% url "index" %}" class="nav-link text-[15px] font-medium">
+                    About
+                </a>
+
+                <!-- DROPDOWN -->
+                <div class="relative dropdown">
+
+                <button class="nav-link text-[15px] font-medium flex items-center gap-2">
+                    Services <i class="fa-solid fa-angle-down"></i>
+                </button>
+
+                <!-- DROPDOWN MENU -->
+                <div class="dropdown-menu absolute top-[42px] left-0 w-[280px] bg-[#111827] border border-white/10 p-4 shadow-2xl">
+
+                    <div class="grid gap-2">
+
+                        <a href="#" class="p-3 rounded-xl hover:bg-white/5 transition text-gray-300 hover:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> SEO Marketing
+                        </a>
+
+                        <a href="#" class="p-3 rounded-xl hover:bg-white/5 transition text-gray-300 hover:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-bullhorn"></i>
+                            Google Ads
+                        </a>
+
+                        <a href="#" class="p-3 rounded-xl hover:bg-white/5 transition text-gray-300 hover:text-white flex items-center gap-2">
+                            <i class="fa-brands fa-facebook"></i>
+                            Social Media Marketing
+                        </a>
+
+                        <a href="#" class="p-3 rounded-xl hover:bg-white/5 transition text-gray-300 hover:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-code"></i>
+                            Website Development
+                        </a>
+
+                        <a href="#" class="p-3 rounded-xl hover:bg-white/5 transition text-gray-300 hover:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye"></i>
+                            Lead Generation
+                        </a>
+
+                    </div>
+
+                </div>
+
+                </div>
+
+                <a href="{% url "index" %}" class="nav-link text-[15px] font-medium">
+                    Portfolio
+                </a>
+
+                <a href="{% url "index" %}" class="nav-link text-[15px] font-medium">
+                    Blog
+                </a>
+
+                <a href="{% url "index" %}" class="nav-link text-[15px] font-medium">
+                    Contact
+                </a>
+
+            </nav>
+
+            <!-- RIGHT SIDE -->
+            <div class="hidden lg:flex items-center gap-4">
+
+                <a href="#" class="gradient-btn px-6 py-3 text-white font-semibold text-sm">
+                Get Free Audit
+                </a>
+
+            </div>
+
+            <!-- MOBILE BUTTON -->
+            <button id="menuBtn" class="lg:hidden text-black text-3xl">
+                ☰
+            </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-[998] hidden"></div>
+
+    <div id="mobileMenu" class="mobile-menu fixed top-0 w-[85%] max-w-[340px] h-full bg-[#fff] z-[999] shadow-2xl p-6">
+
+        <!-- TOP -->
+        <div class="flex items-center justify-between mb-10">
+
+            <div class="flex items-center gap-5">
+
+            <div>
+               <img src="{% static "images/logo.png" %}" alt="Google Findexor" class="w-auto h-17">
+            </div>
+
+            </div>
+
+            <button id="closeBtn" class="text-black text-3xl">
+            ×
+            </button>
+            
+        </div>
+
+        <!-- MENU -->
+        <div class="flex flex-col gap-6 text-black text-lg font-medium ">
+
+            <a href="#">
+                Home
+            </a>
+
+            <a href="#">
+                About
+            </a>
+
+            <a href="#" >
+                Services
+            </a>
+
+            <a href="#" >
+                Portfolio
+            </a>
+
+            <a href="#">
+                Blog
+            </a>
+
+            <a href="#">
+                Contact
+            </a>
+
+            <!-- BUTTON -->
+            <a href="#" class="gradient-btn mt-4 text-center py-3 rounded-xl text-white font-semibold">
+                Get Free Audit
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-slate-200">
+
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+
+            <!-- FOOTER GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 py-14 lg:py-16">
+
+                <!-- COMPANY -->
+                <div>
+
+                    <a href="#" class="inline-block text-2xl font-black tracking-tight text-slate-900">
+                        Google <span class="text-slate-500">Findexor</span>
+                    </a>
+
+                    <p class="mt-5 max-w-sm text-sm leading-7 text-slate-600">
+                        Helping businesses grow through SEO,
+                        Google Ads, Social Media Marketing,
+                        Branding and Lead Generation.
+                    </p>
+
+                    <!-- SOCIAL -->
+                    <div class="flex items-center gap-3 mt-6">
+
+                        <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-xl
+                                bg-slate-50 border border-slate-200 text-slate-600
+                                hover:bg-slate-900 hover:text-white hover:border-slate-900
+                                transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+
+                        <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-xl
+                                bg-slate-50 border border-slate-200 text-slate-600
+                                hover:bg-slate-900 hover:text-white hover:border-slate-900
+                                transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+
+                        <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-xl
+                                bg-slate-50 border border-slate-200 text-slate-600
+                                hover:bg-slate-900 hover:text-white hover:border-slate-900
+                                transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+
+                        <a href="#"
+                        class="w-10 h-10 flex items-center justify-center rounded-xl
+                                bg-slate-50 border border-slate-200 text-slate-600
+                                hover:bg-slate-900 hover:text-white hover:border-slate-900
+                                transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK LINKS -->
+                <div>
+
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-slate-900">
+                        Quick Links
+                    </h4>
+
+                    <ul class="mt-5 space-y-3">
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Home
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                About Us
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Pricing
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Contact
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- SERVICES -->
+                <div>
+
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-slate-900">
+                        Services
+                    </h4>
+
+                    <ul class="mt-5 space-y-3">
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                SEO Services
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Google Ads
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Meta Ads
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Website Development
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#"
+                            class="text-sm text-slate-600 hover:text-slate-900 transition">
+                                Lead Generation
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- CONTACT -->
+                <div>
+
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-slate-900">
+                        Contact Info
+                    </h4>
+
+                    <ul class="mt-5 space-y-4">
+
+                        <li class="flex items-start gap-3">
+
+                            <span class="w-9 h-9 shrink-0 flex items-center justify-center
+                                        rounded-lg bg-slate-50 border border-slate-200
+                                        text-slate-600">
+                                <i class="fa-solid fa-phone text-sm"></i>
+                            </span>
+
+                            <span class="pt-1 text-sm text-slate-600">
+                                +91 9898 03 4466
+                            </span>
+
+                        </li>
+
+
+                        <li class="flex items-start gap-3">
+
+                            <span class="w-9 h-9 shrink-0 flex items-center justify-center
+                                        rounded-lg bg-slate-50 border border-slate-200
+                                        text-slate-600">
+                                <i class="fa-solid fa-envelope text-sm"></i>
+                            </span>
+
+                            <span class="pt-1 text-sm text-slate-600 break-all">
+                                support@googlefindexor.com
+                            </span>
+
+                        </li>
+
+
+                        <li class="flex items-start gap-3">
+
+                            <span class="w-9 h-9 shrink-0 flex items-center justify-center
+                                        rounded-lg bg-slate-50 border border-slate-200
+                                        text-slate-600">
+                                <i class="fa-solid fa-location-dot text-sm"></i>
+                            </span>
+
+                            <span class="pt-1 text-sm text-slate-600">
+                                Mumbai, India
+                            </span>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOTTOM -->
+            <div class="border-t border-slate-200 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
+                <p class="text-sm text-slate-500 text-center md:text-left">
+                    © 2026 Google Findexor. All Rights Reserved.
+                </p>
+
+                <div class="flex items-center gap-5">
+
+                    <a href="#"
+                    class="text-sm text-slate-500 hover:text-slate-900 transition">
+                        Privacy Policy
+                    </a>
+
+                    <a href="#"
+                    class="text-sm text-slate-500 hover:text-slate-900 transition">
+                        Terms & Conditions
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('overlay');
+
+        // Open menu
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            overlay.classList.remove('hidden');
+        });
+
+        // Close menu
+        function closeMenu() {
+            mobileMenu.classList.remove('active');
+            overlay.classList.add('hidden');
+        }
+
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+
+        const openCityPopup = document.getElementById("openCityPopup");
+        const closeCityPopup = document.getElementById("closeCityPopup");
+        const cityPopup = document.getElementById("cityPopup");
+        const cityItems = document.querySelectorAll(".cityItem");
+        const selectedCity = document.getElementById("selectedCity");
+        const citySearch = document.getElementById("citySearch");
+
+        // OPEN
+        openCityPopup.addEventListener("click", () => {
+            cityPopup.classList.remove("hidden");
+            cityPopup.classList.add("flex");
+        });
+
+        // CLOSE
+        closeCityPopup.addEventListener("click", () => {
+            cityPopup.classList.add("hidden");
+            cityPopup.classList.remove("flex");
+        });
+
+        // SELECT CITY
+        cityItems.forEach(item => {
+
+            item.addEventListener("click", () => {
+
+                const cityName = item.innerText.trim();
+
+                // Text change
+                selectedCity.innerText = cityName;
+
+                // Save in browser
+                localStorage.setItem("selectedCity", cityName);
+
+                // Close popup
+                cityPopup.classList.add("hidden");
+                cityPopup.classList.remove("flex");
+
+            });
+
+        });
+
+        // SEARCH CITY
+        citySearch.addEventListener("keyup", () => {
+
+            let value = citySearch.value.toLowerCase();
+
+            cityItems.forEach(item => {
+
+            let cityName = item.innerText.toLowerCase();
+
+            if(cityName.includes(value)){
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+
+            });
+
+        });
+        
+        const placeholders = [
+
+            "Search SEO Services",
+            "Search Google Ads",
+            "Search Social Media Marketing",
+            "Search Website Development",
+            "Search Lead Generation",
+            "Search Branding"
+
+        ];
+
+        const input = document.getElementById("serviceInput");
+
+        let current = 0;
+
+        setInterval(() => {
+
+            current++;
+
+            if(current >= placeholders.length){
+            current = 0;
+            }
+
+            input.setAttribute("placeholder", placeholders[current]);
+
+        }, 2200);
+
+        window.addEventListener("DOMContentLoaded", () => {
+
+            const savedCity = localStorage.getItem("selectedCity");
+
+            if(savedCity){
+
+                document.getElementById("selectedCity").innerText = savedCity;
+
+            }
+
+        });
+    </script>
+
+
+
+</body>
+
+</html>

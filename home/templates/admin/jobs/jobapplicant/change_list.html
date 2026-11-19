@@ -1,0 +1,276 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+
+<style>
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(520px,1fr));
+    gap:18px;
+    margin-top:20px;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 14px 34px rgba(15,23,42,.08);
+}
+
+.header{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+}
+
+.avatar{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:#e0e7ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    color:#1e40af;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.title{
+    font-weight:900;
+    font-size:16px;
+    color:#0f172a;
+}
+
+.sub{
+    font-size:13px;
+    color:#64748b;
+    margin-top:2px;
+}
+
+.badges{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+
+.badge,
+.id-badge{
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.id-badge{
+    background:#111827;
+    color:white;
+}
+
+.blue{background:#dbeafe;color:#1d4ed8;}
+.gray{background:#f1f5f9;color:#334155;}
+.yellow{background:#fef9c3;color:#854d0e;}
+.green{background:#dcfce7;color:#166534;}
+.red{background:#fee2e2;color:#991b1b;}
+
+.hr{
+    border-top:1px solid #e5e7eb;
+    margin:14px 0;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.actions a{
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:13px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+}
+
+.call{background:#0f766e;color:#fff;}
+.whatsapp{background:#25D366;color:#fff;}
+.edit{border:1px solid #e5e7eb;color:#0f172a;background:#fff;}
+
+@media (max-width: 640px){
+
+    .cards{
+        grid-template-columns:1fr !important;
+        gap:14px;
+        padding:0 6px;
+    }
+
+    .actions a{
+        flex:1;
+        min-width:120px;
+    }
+
+    #content,
+    .content,
+    .results,
+    #container{
+        max-width:100% !important;
+        overflow-x:hidden !important;
+    }
+}
+
+</style>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+{% endblock %}
+
+
+{% block result_list %}
+<div class="cards">
+
+{% for obj in cl.result_list %}
+<div class="card">
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="avatar">
+        {{ obj.full_name|default:"?"|slice:":1"|upper }}
+    </div>
+
+    <div>
+        <div class="title">
+            {{ obj.full_name|default:"No Name" }}
+        </div>
+
+        <div class="sub">
+            📞 {{ obj.phone|default:"—" }} |
+            ✉ {{ obj.email|default:"—" }}
+        </div>
+
+        <div class="badges">
+
+            <span class="id-badge">
+                JA{{ obj.id|stringformat:"03d" }}
+            </span>
+
+            {% if obj.job %}
+                <span class="id-badge">
+                    J{{ obj.job.id|stringformat:"03d" }}
+                </span>
+            {% endif %}
+
+            {% if obj.interview %}
+                <span class="id-badge">
+                    I{{ obj.interview.id|stringformat:"03d" }}
+                </span>
+            {% endif %}
+
+            {% if obj.job %}
+                <span class="badge blue">
+                    {{ obj.job.title|default:"—" }}
+                </span>
+
+                <span class="badge gray">
+                    {{ obj.job.company|default:"—" }}
+                </span>
+            {% endif %}
+
+            <!-- STATUS COLORS -->
+            {% if obj.status == "applied" %}
+                <span class="badge yellow">New</span>
+            {% elif obj.status == "shortlisted" %}
+                <span class="badge blue">Shortlisted</span>
+            {% elif obj.status == "interview" %}
+                <span class="badge blue">Interview</span>
+            {% elif obj.status == "selected" %}
+                <span class="badge green">Selected</span>
+            {% elif obj.status == "rejected" %}
+                <span class="badge red">Rejected</span>
+            {% else %}
+                <span class="badge gray">
+                    {{ obj.get_status_display }}
+                </span>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+<hr class="hr">
+
+<!-- DETAILS -->
+
+<div class="sub">
+    📍 {{ obj.city|default:"—" }}
+    {{ obj.locality|default:"" }} <br>
+
+    💼 Experience:
+    {{ obj.experience_months|default:"0" }} months <br>
+
+    💰 Expected Salary:
+    ₹{{ obj.expected_salary|default:"—" }} <br>
+
+    🗓 Applied:
+    {{ obj.applied_at|date:"d M Y" }}
+</div>
+
+{% if obj.interview %}
+<hr class="hr">
+
+<div class="sub">
+    🎤 Interview Scheduled <br>
+    📅 {{ obj.interview.scheduled_datetime|date:"d M Y, h:i A" }} <br>
+    👤 {{ obj.interview.assigned_to|default:"—" }} <br>
+    📊 {{ obj.interview.get_status_display }}
+</div>
+{% endif %}
+
+<hr class="hr">
+
+<!-- ACTIONS -->
+
+<div class="actions">
+
+    {% if obj.phone %}
+    <a class="call" href="tel:{{ obj.phone }}">
+        <i class="fa fa-phone"></i> Call
+    </a>
+
+    <a class="whatsapp"
+        target="_blank"
+        href="https://wa.me/91{{ obj.phone|cut:'+'|cut:' '|cut:'-' }}?text=
+        Hello%20{{ obj.full_name|urlencode }}
+        %0ARegarding%20{{ obj.job.title|default:''|urlencode }}
+        %0A%0ADescription:%20{{ obj.job.description|striptags|urlencode }}">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+    {% endif %}
+
+    <a class="edit"
+       href="{% url 'admin:jobs_jobapplicant_change' obj.id %}">
+        <i class="fa fa-pen"></i> Edit
+    </a>
+
+</div>
+
+</div>
+{% empty %}
+<p>No applicants found.</p>
+{% endfor %}
+
+</div>
+{% endblock %}

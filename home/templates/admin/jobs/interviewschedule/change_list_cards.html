@@ -1,0 +1,205 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block result_list %}
+
+<style>
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(520px,1fr));
+    gap:18px;
+    margin-top:20px;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 14px 34px rgba(15,23,42,.08);
+}
+
+.header{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+}
+
+.logo{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:#e0e7ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    color:#1e40af;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.title{
+    font-weight:900;
+    font-size:16px;
+    color:#0f172a;
+}
+
+.meta{
+    font-size:13px;
+    color:#64748b;
+    margin-top:6px;
+}
+
+.badge{
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.blue{background:#dbeafe;color:#1d4ed8;}
+.gray{background:#f1f5f9;color:#334155;}
+.green{background:#dcfce7;color:#166534;}
+.red{background:#fee2e2;color:#991b1b;}
+.yellow{background:#fef9c3;color:#854d0e;}
+
+.hr{
+    border-top:1px solid #e5e7eb;
+    margin:14px 0;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.actions a{
+    padding:10px 16px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:13px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+}
+
+.call-btn{background:#0f766e;color:#fff;}
+.whatsapp-btn{background:#25D366;color:#fff;}
+.edit-btn{border:1px solid #e5e7eb;color:#0f172a;background:#fff;}
+
+@media (max-width:640px){
+    .cards{grid-template-columns:1fr !important;}
+    .actions a{flex:1;}
+}
+
+</style>
+
+
+<div class="cards">
+
+{% for obj in cl.result_list %}
+<div class="card">
+
+    <div class="header">
+
+        <div class="logo">
+            {{ obj.applicant.full_name|default:"?"|slice:":1"|upper }}
+        </div>
+
+        <div>
+            <div class="title">
+
+                <span class="badge gray">
+                    INT{{ obj.id|stringformat:"03d" }}
+                </span>
+
+                {% if obj.applicant %}
+                <span class="badge blue">
+                    APP{{ obj.applicant.id|stringformat:"03d" }}
+                </span>
+                {% endif %}
+
+                {% if obj.job %}
+                <span class="badge gray">
+                    JOB{{ obj.job.id|stringformat:"03d" }}
+                </span>
+                {% endif %}
+
+                <br>
+                {{ obj.applicant.full_name|default:"No Name" }}
+            </div>
+
+            <div class="meta">
+                💼 {{ obj.job.title|default:"—" }} |
+                🏢 {{ obj.job.company|default:"—" }}
+            </div>
+        </div>
+    </div>
+
+    <hr class="hr">
+
+    <div class="meta">
+        📞 {{ obj.applicant.phone|default:"—" }} <br>
+        📅 {{ obj.scheduled_datetime|date:"d M Y, h:i A" }} <br>
+        👤 Assigned: {{ obj.assigned_to|default:"—" }} <br>
+
+        📊 Status:
+        {% if obj.status == "scheduled" %}
+            <span class="badge yellow">Scheduled</span>
+        {% elif obj.status == "confirmed" %}
+            <span class="badge blue">Confirmed</span>
+        {% elif obj.status == "completed" %}
+            <span class="badge green">Completed</span>
+        {% elif obj.status == "cancelled" %}
+            <span class="badge red">Cancelled</span>
+        {% else %}
+            <span class="badge gray">{{ obj.get_status_display }}</span>
+        {% endif %}
+    </div>
+
+    {% if obj.remarks %}
+        <div class="meta">
+            💬 {{ obj.remarks|truncatechars:120 }}
+        </div>
+    {% endif %}
+
+    <hr class="hr">
+
+    <div class="actions">
+
+        {% if obj.applicant.phone %}
+
+        <a class="call-btn"
+           href="tel:{{ obj.applicant.phone }}">
+           📞 Call
+        </a>
+
+        <a class="whatsapp-btn"
+           target="_blank"
+           href="https://wa.me/91{{ obj.applicant.phone|cut:'+'|cut:' '|cut:'-' }}?text=Hello%20{{ obj.applicant.full_name|urlencode }}%0AYour%20interview%20for%20{{ obj.job.title|urlencode }}%20is%20scheduled.">
+           💬 WhatsApp
+        </a>
+
+        {% endif %}
+
+        <a class="edit-btn"
+           href="{% url 'admin:jobs_interviewschedule_change' obj.id %}">
+           ✏️ Edit
+        </a>
+
+    </div>
+
+</div>
+{% empty %}
+<p>No interviews found.</p>
+{% endfor %}
+
+</div>
+
+{% endblock %}

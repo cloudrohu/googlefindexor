@@ -1,0 +1,218 @@
+{% extends "admin/change_list.html" %}
+{% load tz %}
+{% block result_list %}
+
+<style>
+.dashboard {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-box {
+    flex: 1;
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.stat-box h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.stat-box .number {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    gap: 22px;
+}
+
+.crm-card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    transition: 0.3s ease;
+    border-left: 6px solid #e5e7eb;
+}
+
+.crm-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.09);
+}
+
+.overdue {
+    border-left-color: #dc2626 !important;
+}
+
+.done {
+    border-left-color: #16a34a !important;
+}
+
+.top {
+    display: flex;
+    gap: 15px;
+}
+
+.avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #eef2ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.meta {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 3px;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.new { background:#dbeafe; color:#1e40af; }
+.re { background:#fef3c7; color:#92400e; }
+.cancel { background:#fee2e2; color:#991b1b; }
+.done-badge { background:#dcfce7; color:#166534; }
+
+.divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 18px 0;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.call { background:#0f766e; color:white; }
+.whatsapp { background:#22c55e; color:white; }
+.edit { color:#2563eb; }
+</style>
+
+{% now "UTC" as now %}
+
+<!-- ================= DASHBOARD ================= -->
+
+<div class="dashboard">
+
+    <div class="stat-box">
+        <h3>Total Meetings</h3>
+        <div class="number">{{ cl.result_list|length }}</div>
+    </div>
+
+    <div class="stat-box">
+        <h3>Deal Done</h3>
+        <div class="number">
+            {% for obj in cl.result_list %}
+                {% if obj.status == "Deal Done" %}1{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= CARDS ================= -->
+
+<div class="cards">
+
+{% for obj in cl.result_list %}
+
+<div class="crm-card
+{% if obj.meeting_date and obj.meeting_date < now and obj.status != "Deal Done" %}
+    overdue
+{% endif %}
+{% if obj.status == "Deal Done" %}
+    done
+{% endif %}
+">
+
+    <div class="top">
+        <div class="avatar">👤</div>
+
+        <div>
+            <div class="name">
+                {{ obj.response.business_name|default:"No Business Name" }}
+            </div>
+
+            <div class="meta">
+                📞 {{ obj.response.contact_no|default:"—" }}
+            </div>
+
+            {% if obj.status == "New Meeting" %}
+                <div class="status new">New</div>
+            {% elif obj.status == "Re Meeting" %}
+                <div class="status re">Re Meeting</div>
+            {% elif obj.status == "Cancelled" %}
+                <div class="status cancel">Cancelled</div>
+            {% elif obj.status == "Deal Done" %}
+                <div class="status done-badge">Deal Done</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="meta">
+        📅 {{ obj.meeting_date|date:"d M Y, h:i A" }} <br>
+        👤 Assigned: {{ obj.assigned_to|default:"—" }} <br>
+        💬 {{ obj.comment|default:"No Comment" }}
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="actions">
+        {% if obj.response.contact_no %}
+        <a href="tel:{{ obj.response.contact_no }}" class="btn call">Call</a>
+
+        <a href="https://wa.me/91{{ obj.response.contact_no }}"
+           target="_blank"
+           class="btn whatsapp">
+           WhatsApp
+        </a>
+        {% endif %}
+
+        <a href="{% url 'admin:response_meeting_change' obj.id %}"
+           class="btn edit">
+           Edit
+        </a>
+    </div>
+
+</div>
+
+{% endfor %}
+</div>
+
+{% endblock %}
