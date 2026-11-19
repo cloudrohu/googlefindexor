@@ -11,7 +11,6 @@
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 min-h-[620px] flex items-center">
-
         <div id="heroContent" class="max-w-3xl transition-all duration-500">
 
             <span id="heroBadge" class="inline-flex items-center gap-2 px-4 py-2 mb-5 rounded-full bg-white/80 border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider shadow-sm">
@@ -63,30 +62,22 @@
     </div>
 
 
-    <!-- PREVIOUS -->
     <button id="prev" class="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 border border-slate-200 text-slate-700 shadow-lg hover:bg-white hover:scale-110 transition z-20">
-
         <i class="fa-solid fa-chevron-left text-sm"></i>
-
     </button>
 
 
-    <!-- NEXT -->
     <button id="next" class="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 border border-slate-200 text-slate-700 shadow-lg hover:bg-white hover:scale-110 transition z-20">
-
         <i class="fa-solid fa-chevron-right text-sm"></i>
-
     </button>
 
 
-    <!-- DOTS -->
     <div class="absolute bottom-7 left-1/2 -translate-x-1/2 z-20 flex gap-2 px-4 py-2.5 rounded-full bg-white/80 backdrop-blur border border-slate-200 shadow-sm">
-
-        <button class="dot w-7 h-2 rounded-full bg-slate-900 transition-all"></button>
-        <button class="dot w-2 h-2 rounded-full bg-slate-300 transition-all"></button>
-        <button class="dot w-2 h-2 rounded-full bg-slate-300 transition-all"></button>
-
+        {% for item in slider %}
+            <button class="dot transition-all {% if forloop.first %}w-7 h-2 rounded-full bg-slate-900{% else %}w-2 h-2 rounded-full bg-slate-300{% endif %}"></button>
+        {% endfor %}
     </div>
+
 
 </section>
 
@@ -94,30 +85,16 @@
 <script>
 
     const slides = [
-        {
-            image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=85",
-            icon: "fa-chart-line",
-            badge: "Digital Marketing",
-            title: "Drive Growth with",
-            highlight: "Targeted Digital Strategies",
-            text: "Maximize your brand visibility, boost qualified traffic, and achieve peak ROI through tailored SEO, PPC, and social media campaigns."
-        },
-        {
-            image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1920&q=85",
-            icon: "fa-code",
-            badge: "IT & Development",
-            title: "Build Smarter",
-            highlight: "Web & IT Solutions",
-            text: "We build high-performance websites, web applications and scalable software solutions designed for modern businesses."
-        },
-        {
-            image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1920&q=85",
-            icon: "fa-cloud",
-            badge: "Cloud & Technology",
-            title: "Scale Your Business",
-            highlight: "With Modern Technology",
-            text: "Secure cloud infrastructure, reliable deployment solutions and modern technology designed to help your business scale confidently."
-        }
+        {% for rs in slider %}
+            {
+                image: "{{rs.image.url}}",
+                icon: "fa-chart-line",
+                badge: "{{rs.badge_title}}",
+                title: "{{rs.title1}}",
+                highlight: "{{rs.title2}}",
+                text: "{{rs.desciption}}"
+            },
+        {% endfor %}
     ];
 
     let current = 0;
@@ -999,11 +976,7 @@
             <!-- BIG CARD -->
             <div class="featured-card">
 
-                <img src="{% static "images/banner-front.jpg" %}" alt="Professional Business Card">
-
-                <div class="card-overlay">
-                    <span>Front Side</span>
-                </div>
+                <img src="{{settings_obj.front_view_card.url}}" alt="Professional Business Card">
 
             </div>
 
@@ -1013,26 +986,13 @@
 
                 <div class="small-card">
 
-                    <img
-                        src="images/card-back.jpg"
-                        alt="Business Card Back Side">
-
-                    <div class="small-overlay">
-                        Back Side
-                    </div>
-
+                    <img src="{{settings_obj.back_view_card.url}}" alt="Business Card Back Side">
                 </div>
 
 
                 <div class="small-card">
 
-                    <img
-                        src="images/card-front-2.jpg"
-                        alt="Alternate Business Card Design">
-
-                    <div class="small-overlay">
-                        Alternate Design
-                    </div>
+                    <img  src="{{settings_obj.alternate_design_card.url}}"  alt="Alternate Business Card Design">
 
                 </div>
 
@@ -1602,24 +1562,30 @@
                     </div>
 
                     <div>
-                        <h4>Call Us</h4>
-                        <a href="tel:+919898034466"><p>+91 9898 03 4466</p></a>
+                        <a href="tel:{{settings_obj.phone_number}}">
+                            <h4>Call Us</h4>
+                            <a href="tel:+91{{settings_obj.phone_number}}"><p>+91 {{settings_obj.phone_number}}</p></a>
+                        </a>
+                            
                     </div>
 
                 </div>
 
-                <div class="contact-card">
+            <!-- EMAIL CARD -->
+            <div class="contact-card">
 
-                    <div class="icon-box">
-                        <i class="fa-solid fa-envelope"></i>
-                    </div>
-
-                    <div>
-                        <h4>Email</h4>
-                        <p>support@googlefindexor.com</p>
-                    </div>
-
+                <div class="icon-box">
+                    <i class="fa-solid fa-envelope"></i>
                 </div>
+
+                <div>
+                    <h4>Email</h4>
+                    <a href="mailto:{{ settings_obj.email }}">
+                        <p>{{ settings_obj.email }}</p>
+                    </a>
+                </div>
+
+            </div>
 
                 <div class="contact-card">
 
@@ -1629,7 +1595,7 @@
 
                     <div>
                         <h4>Location</h4>
-                        <p>Mumbai, India</p>
+                        <p>{{settings_obj.address}}</p>
                     </div>
 
                 </div>
