@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
 
-    'tabbed_admin',
+    #'tabbed_admin',
     'jazzmin',          
     'rangefilter',
     'multiselectfield',
