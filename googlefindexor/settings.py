@@ -32,8 +32,6 @@ INSTALLED_APPS = [
     'multiselectfield',
     'import_export',
 
-
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-
-
+    'services',
 
     'mptt',
     'ckeditor',
