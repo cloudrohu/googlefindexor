@@ -11,8 +11,6 @@ from .models import Settings, Slider
 from django.http import JsonResponse
 
 
-
-
 class IndexView(TemplateView):
     template_name = "index.html"
 
@@ -23,5 +21,7 @@ class IndexView(TemplateView):
 
         context["settings_obj"] = settings_obj
         context["slider"] = Slider.objects.all()
+
+
 
         return context

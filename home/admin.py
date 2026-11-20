@@ -120,3 +120,5 @@ class SliderAdmin(admin.ModelAdmin):
 
     # Set the column header name in the admin panel
     image_thumbnail.short_description = 'Thumbnail'
+
+
